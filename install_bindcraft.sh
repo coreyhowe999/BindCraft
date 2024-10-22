@@ -49,11 +49,11 @@ install_dir=$(pwd)
 
 ### BindCraft install
 printf "Installing BindCraft environment\n"
-#$pkg_manager create --name BindCraft python=3.10 -y
-$pkg_manager install python=3.10 -y
+$pkg_manager create --name BindCraft python=3.10 -y
+#$pkg_manager install python=3.10 -y
 CONDA_BASE=$(conda info --base)
-#source ${CONDA_BASE}/bin/activate ${CONDA_BASE}/envs/BindCraft
-#printf "BindCraft environment activated at ${CONDA_BASE}/envs/BindCraft"
+source ${CONDA_BASE}/bin/activate ${CONDA_BASE}/envs/BindCraft
+printf "BindCraft environment activated at ${CONDA_BASE}/envs/BindCraft"
 
 # install required packages
 if [ -n "$cuda" ]; then
@@ -74,7 +74,7 @@ else
   wget -P ${install_dir}/params/ https://storage.googleapis.com/alphafold/alphafold_params_2022-12-06.tar
   tar -xvf ${install_dir}/params/alphafold_params_2022-12-06.tar
   rm ${install_dir}/params/alphafold_params_2022-12-06.tar
-
+fi
 # chmod executables
 chmod +x ${install_dir}/functions/dssp
 chmod +x ${install_dir}/functions/DAlphaBall.gcc
