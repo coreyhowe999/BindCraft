@@ -49,10 +49,11 @@ install_dir=$(pwd)
 
 ### BindCraft install
 printf "Installing BindCraft environment\n"
-$pkg_manager create --name BindCraft python=3.10 -y
+#$pkg_manager create --name BindCraft python=3.10 -y
+$pkg_manager install python=3.10 -y
 CONDA_BASE=$(conda info --base)
-source ${CONDA_BASE}/bin/activate ${CONDA_BASE}/envs/BindCraft
-printf "BindCraft environment activated at ${CONDA_BASE}/envs/BindCraft"
+#source ${CONDA_BASE}/bin/activate ${CONDA_BASE}/envs/BindCraft
+#printf "BindCraft environment activated at ${CONDA_BASE}/envs/BindCraft"
 
 # install required packages
 if [ -n "$cuda" ]; then
@@ -65,17 +66,21 @@ fi
 pip3 install git+https://github.com/sokrypton/ColabDesign.git --no-deps
 
 # Download AlphaFold2 weights
-mkdir -p ${install_dir}/params/
-cd ${install_dir}/params/
-wget -P ${install_dir}/params/ https://storage.googleapis.com/alphafold/alphafold_params_2022-12-06.tar
-tar -xvf ${install_dir}/params/alphafold_params_2022-12-06.tar
+if [[ -d ${install_dir}/params/ ]]; then
+  echo "AF2 params already downloaded"
+else
+  mkdir -p ${install_dir}/params/
+  cd ${install_dir}/params/
+  wget -P ${install_dir}/params/ https://storage.googleapis.com/alphafold/alphafold_params_2022-12-06.tar
+  tar -xvf ${install_dir}/params/alphafold_params_2022-12-06.tar
+  rm ${install_dir}/params/alphafold_params_2022-12-06.tar
 
 # chmod executables
 chmod +x ${install_dir}/functions/dssp
 chmod +x ${install_dir}/functions/DAlphaBall.gcc
 
 # finish
-conda deactivate
+#conda deactivate
 printf "BindCraft environment installed\n"
 
 ############################################################################################################
@@ -88,6 +93,6 @@ printf "$pkg_manager cleaned up\n"
 ################## finish script
 t=$SECONDS 
 printf "Finished setting up BindCraft environment\n"
-printf "Activate environment using command: \"$pkg_manager activate BindCraft\""
+#printf "Activate environment using command: \"$pkg_manager activate BindCraft\""
 printf "\n"
 printf "Installation took $(($t / 3600)) hours, $((($t / 60) % 60)) minutes and $(($t % 60)) seconds."
